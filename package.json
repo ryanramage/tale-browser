@@ -1,0 +1,27 @@
+{
+  "name": "tale-browser",
+  "version": "0.0.0",
+  "description": "A browser side library that renders a tale",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "browserify": "./node_modules/.bin/browserify tests/launcher.js -t ractivate  > tests/tale-browser.bundle.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "async": "^0.9.0",
+    "director": "^1.2.3",
+    "lodash": "^2.4.1",
+    "marked": "^0.3.2",
+    "ractive": "^0.4.0",
+    "request": "^2.36.0",
+    "store": "^1.3.16",
+    "xxtea-xmlhttprequest": "0.0.1"
+  },
+  "devDependencies": {
+    "browserify": "^4.2.0",
+    "ractivate": "^0.1.0",
+    "tale-plugin-markdown": "^0.0.0"
+  }
+}

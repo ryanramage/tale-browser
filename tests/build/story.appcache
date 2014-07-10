@@ -1,0 +1,32 @@
+CACHE MANIFEST
+
+# 3f76b523-7271-4375-a2c2-aa28720688c0
+# 0.0.0
+
+CACHE:
+js/tale.min.js
+package.json
+node/8d4063b2-b695-4667-9977-8fe7caf52c4a
+node/4d2882c5-d6c5-44f8-b996-ab8d3d9c9005
+node/8fc97a3a-19bf-447d-86ef-cce29ed5407d
+node/c4dfcd28-be14-412e-9b62-3d7e5b777e98
+node/13f99853-1266-4a3d-9a72-34a6bf10ecaf
+node/c564d219-392c-4de3-a5a9-dc4c5e8aa96e
+key/50084007-9473-42df-8146-d138c5a837ce
+key/1fb1e2cd-11b9-4046-9465-e09b3ea980fb
+key/63227481-61b5-4b41-90a1-aac385c151b4
+key/933eb17a-0791-4196-9be3-b0a9868a7ef8
+key/41049950-e2c1-48cf-b914-7e4f44dbb0d1
+file/149cfff2-1ba7-444b-8482-dabaedc0e435
+file/1db61761-ae00-41bc-ae3a-4972de9ba8fa
+file/7445fffa-f3e2-42cc-bae6-34ef753b3103
+file/66ca02a0-4a72-4759-9705-003176b84ba9
+file/6cbb26d1-ee14-414c-980d-12fef4236b21
+file/cb3068fd-475f-4362-b4ab-615495761034
+file/af8fd92c-9fb6-4eee-b0ed-d1126a29b506
+
+
+NETWORK:
+*
+http://*
+https://*
