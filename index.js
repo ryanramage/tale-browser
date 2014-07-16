@@ -1,7 +1,6 @@
 var _ = require('lodash'),
     async = require('async'),
     director = require('director'),
-    oboe = require('oboe'),
     marked = require('marked'),
     ractive = require('ractive'),
     store = require('store'),
@@ -176,6 +175,3 @@ function store_key(clue_id, chapter_id, key){
   store.set(clue_id, chapter_id);
   store.set(chapter_id, key);
 }
-
-
-
