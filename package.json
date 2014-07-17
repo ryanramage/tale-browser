@@ -1,6 +1,6 @@
 {
   "name": "tale-browser",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "A browser side library that renders a tale",
   "main": "index.js",
   "scripts": {
@@ -27,7 +27,8 @@
     "marked": "^0.3.2",
     "ractive": "^0.4.0",
     "request": "^2.36.0",
-    "store": "^1.3.16"
+    "store": "^1.3.16",
+    "tale-read-api": "0.0.4"
   },
   "devDependencies": {
     "browserify": "^4.2.0",

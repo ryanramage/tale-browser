@@ -4,14 +4,13 @@ var _ = require('lodash'),
     marked = require('marked'),
     ractive = require('ractive'),
     store = require('store'),
-    read_api = require('tale-read-api'),
-    chapter_t = require('./chapter.template.html');
+    read_api = require('tale-read-api');
 
 module.exports = function(options) {
   var opts = options || {};
   if (!opts.el) opts.el = '#tale';
   if (!opts.base_url) opts.base_url = './';
-  if (!opts.template) opts.template = chapter_t;
+  if (!opts.template) opts.template = '#template';
   if (!opts.plugins)  opts.plugins = {};
 
   var read = read_api(opts.base_url),
