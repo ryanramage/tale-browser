@@ -1,5 +1,4 @@
 var _ = require('lodash'),
-    async = require('async'),
     director = require('director'),
     marked = require('marked'),
     ractive = require('ractive'),
@@ -21,6 +20,10 @@ module.exports = function(options) {
           next: [],
           all_hints: [],
           unlocking: false,
+          content: {
+            text: null,
+            markdown: null
+          },
           context: {
             current_chapter: null,
             current_key: null,
@@ -35,11 +38,12 @@ module.exports = function(options) {
         data: initial_state
       }),
       routes = {
-        '/*': show_chapter.bind(null, ractive, read, opts.plugins),
-        '/' : first_chapter.bind(null, ractive, read, opts.plugins)
+        '/*': show_chapter.bind(null, ractive, read),
+        '/' : first_chapter.bind(null, ractive, read)
       }
 
   setup_events(ractive, read);
+  setup_plugins(ractive, read, opts.plugins)
   if (opts.routes) routes = _.extend(routes, opts.routes);
 
   router = director.Router(routes);
@@ -50,52 +54,53 @@ module.exports = function(options) {
 
 
 
-function first_chapter(ractive, read, plugins) {
+function first_chapter(ractive, read) {
   read.first_node(function(err, start_chapter){
-    if (err) return;
+    if (err) return console.log('error on first chapter', err);
     var context = ractive.get('context');
     context.current_chapter = context.start_chapter;
     context.current_key = null;
 
-    render_chapter(ractive, read, plugins, start_chapter, null);
+    render_chapter(ractive, start_chapter, null);
   })
 }
 
 
 
-function show_chapter(ractive, read, plugins, chapter_id) {
+function show_chapter(ractive, read, chapter_id) {
   var context = ractive.get('context');
   // the current route is pointing to the currently unlocked
   if (context.current_chapter && context.current_key && context.current_chapter.id === chapter_id){
-    return render_chapter(ractive, read, plugins, current_chapter, current_key)
+    return render_chapter(ractive, current_chapter, current_key)
   }
   var key = store.get(chapter_id);
   if (!key) return showEncryptedMsg();
 
 
   read.read_node(chapter_id, key, function(err, chapter){
-    render_chapter(ractive, read, plugins, chapter, key);
+    render_chapter(ractive, chapter, key);
   })
 }
 
 
 
-function render_chapter(ractive, read, plugins, chapter, key) {
+function render_chapter(ractive, chapter, key) {
   ractive.set('chapter', chapter);
 
-  function done(err){
+  var after = false;
+  ractive.observe('content.*', function(){
+    if (after) return;
+    after = true;
     render_clues(ractive, chapter);
     ractive.set('unlocking', false);
     ractive.set('appcache_loading', false);
     window.scrollTo(0, 0);
-  }
-  if (chapter.type === 'text') ractive.set('content', chapter.text);
 
-  async.eachSeries(chapter.plugins, function(requested_plugin, cb){
-    var plugin = plugins[requested_plugin]
-    if (!plugin) return cb();
-    plugin(ractive, read, chapter, key, cb)
-  }, done);
+  })
+
+  ractive.fire('chapter', chapter, key);
+  if (chapter.text === 'text') ractive.set('content.text', chapter.text);
+  else ractive.set('content.text', null);
 
 }
 
@@ -130,6 +135,14 @@ function setup_events(ractive, read) {
   })
 }
 
+function setup_plugins(ractive, read, plugins) {
+  _.each(plugins, function(plugin, name){
+    try { plugin(ractive, read) }
+    catch(e){
+      console.log('there was a problem init a plugin', name)
+    }
+  })
+}
 
 
 function crack_chapter(ractive, read, id, pass, keypath, next_hints) {
@@ -137,6 +150,7 @@ function crack_chapter(ractive, read, id, pass, keypath, next_hints) {
     if (err) return showErrorMsg(ractive, keypath, next_hints);
     invalid_count = 0; chapter_hint_count = 0; internal_hint_count = 0;
     ractive.set('all_hints', []);
+    ractive.fire('cracked');
     current_chapter = next.node;
     current_key = next.key;
     store_key(id, next.node.id, next.key);
