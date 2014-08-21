@@ -42,6 +42,10 @@ module.exports = function(options) {
         '/' : first_chapter.bind(null, ractive, read)
       }
 
+  read.package_details(function(err, pkg){
+    ractive.set('package', pkg);
+  })
+
   setup_events(ractive, read);
   setup_plugins(ractive, read, opts.plugins)
   if (opts.routes) routes = _.extend(routes, opts.routes);
@@ -78,7 +82,17 @@ function show_chapter(ractive, read, chapter_id) {
 
 
   read.read_node(chapter_id, key, function(err, chapter){
+    if (err) return router.setRoute('/')
+
+
+
     render_chapter(ractive, chapter, key);
+
+    if (ractive.get('please_log_unlocked')){
+      ractive.fire('log', 'unlocked', {id: chapter.id, proof: chapter.proof   })
+      ractive.set('please_log_unlocked', false);
+    }
+
   })
 }
 
@@ -139,7 +153,7 @@ function setup_plugins(ractive, read, plugins) {
   _.each(plugins, function(plugin, name){
     try { plugin(ractive, read) }
     catch(e){
-      console.log('there was a problem init a plugin', name)
+      console.log('there was a problem init a plugin', name, e)
     }
   })
 }
@@ -151,6 +165,7 @@ function crack_chapter(ractive, read, id, pass, keypath, next_hints) {
     invalid_count = 0; chapter_hint_count = 0; internal_hint_count = 0;
     ractive.set('all_hints', []);
     ractive.fire('cracked');
+    ractive.set('please_log_unlocked', true);
     current_chapter = next.node;
     current_key = next.key;
     store_key(id, next.node.id, next.key);
