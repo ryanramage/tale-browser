@@ -1,6 +1,6 @@
 {
   "name": "tale-browser",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A browser side library that renders a tale",
   "main": "index.js",
   "scripts": {
